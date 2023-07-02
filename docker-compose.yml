@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  nest-app:
+    container_name: nest-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    volumes:
+      - .:/nest-app
+      - /nest-app/node_modules
+    ports:
+      - 3030:3030
