@@ -8,7 +8,8 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     volumes:
-      - .:/nest-app
-      - /nest-app/node_modules
+      - .:/usr/src/nest-app
+      - /usr/src/nest-app/node_modules
+      - /usr/src/nest-app/dist
     ports:
       - 3030:3030
