@@ -4,13 +4,18 @@ import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
 import { BookDTO } from '@domain/dtos';
 
-type SearchBookParams = {
+export type SearchBookParams = {
   search: string;
   page: string;
 };
 
+export type SearchBookReturns = {
+  totalPage: number;
+  books: BookDTO[];
+};
+
 //이용하는 api에서 반환되는 Book 타입선언
-type Book = {
+type InfrastruectureBook = {
   title: string;
   subtitle: string;
   isbn13: string;
@@ -23,7 +28,7 @@ type Book = {
 export class BooksService {
   constructor(private readonly httpService: HttpService) {}
 
-  async searchBook(params: SearchBookParams): Promise<any> {
+  async searchBook(params: SearchBookParams): Promise<SearchBookReturns> {
     if (
       !params ||
       !params?.search?.trim().length ||
@@ -63,7 +68,7 @@ export class BooksService {
       //검색결과가 없는 경우 리턴
       if (total < 1) return { totalPage: 0, books: [] };
 
-      const bookList = books.map((book: Book) => {
+      const bookList = books.map((book: InfrastruectureBook) => {
         const { title, subtitle, image } = book;
         return new BookDTO({ title: title, subtitle: subtitle, image: image });
       });
@@ -110,7 +115,7 @@ export class BooksService {
   async getNotKeywordBookList(params: {
     notKeywordList: string[];
     page: string;
-  }): Promise<{ totalPage: number; books: BookDTO[] }> {
+  }): Promise<SearchBookReturns> {
     const { notKeywordList, page } = params;
     const [includeKeyword, excludeKeyword] = notKeywordList;
 
@@ -167,7 +172,7 @@ export class BooksService {
     }
 
     //exclude keyword 필터링 로직
-    const filteredBookList = bookList.filter((book: Book) => {
+    const filteredBookList = bookList.filter((book: InfrastruectureBook) => {
       const { title, subtitle } = book;
 
       const lowerExcludeKeyword = excludeKeyword.toLowerCase();
@@ -188,7 +193,7 @@ export class BooksService {
 
         return indexValid;
       })
-      .map((book: Book) => {
+      .map((book: InfrastruectureBook) => {
         const { title, subtitle, image } = book;
         return new BookDTO({ title: title, subtitle: subtitle, image: image });
       });
