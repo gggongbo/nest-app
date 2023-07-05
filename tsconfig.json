@@ -18,7 +18,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@domain": ["../domain/src"]
+      "@domain*": ["../domain/src/*"]
     }
   }
 }
